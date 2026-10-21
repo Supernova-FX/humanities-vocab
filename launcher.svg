@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xhtml="http://www.w3.org/1999/xhtml"
+     width="100%" height="100%"
+     viewBox="0 0 1200 800"
+     preserveAspectRatio="none">
+  <rect width="1200" height="800" fill="#ffffff"/>
+  <foreignObject x="0" y="0" width="1200" height="800">
+    <xhtml:div xmlns="http://www.w3.org/1999/xhtml"
+               id="app"
+               style="width:100%;height:100vh;overflow:auto;">
+      <p style="font-family:Arial,sans-serif;padding:24px">
+        Loading Humanities Vocab…
+      </p>
+    </xhtml:div>
+  </foreignObject>
+  <script href="https://cdn.jsdelivr.net/gh/supernova-fx/humanities-vocab@main/site-loader.js"></script>
+</svg>
