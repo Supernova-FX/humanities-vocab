@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -205,9 +204,9 @@ html.home-snapping{scroll-snap-type:y mandatory}
 .secondary-button:hover{filter:brightness(.96)}
 
 /* Platform-specific brand accents. */
-#page-gimkits{--platform:#00a86b;--platform-dark:#008452;--platform-soft:#e8f8f0;--platform-ink:#006b42}
-#page-blookets{--platform:#3986f6;--platform-dark:#2469d8;--platform-soft:#eaf2ff;--platform-ink:#2058b0}
-#page-quizlets{--platform:#4257b2;--platform-dark:#304397;--platform-soft:#edf0ff;--platform-ink:#344798}
+#page-gimkits{--platform:#4C1B81;--platform-dark:#391460;--platform-soft:#F1EAF8;--platform-ink:#4C1B81}
+#page-blookets{--platform:#02B0EA;--platform-dark:#028BB9;--platform-soft:#E6F8FE;--platform-ink:#027FA9}
+#page-quizlets{--platform:#4257B2;--platform-dark:#304397;--platform-soft:#ECEFFF;--platform-ink:#35499C}
 
 @media(prefers-color-scheme:dark) {
   :root:not([data-theme="light"]) #page-gimkits{--platform:#4cdb9a;--platform-dark:#2cc587;--platform-soft:#173a2d;--platform-ink:#7ce7b5}
@@ -323,15 +322,15 @@ footer a{color:var(--accent)}
   <section class="home-scene">
     <div class="container">
       <h1 class="hero-title">Humanities I<br><span class="highlight">Vocab Study Tools</span></h1>
-      <p class="hero-description">A Google Doc with everything you need to get straight 100s on all vocab quizzes.</p>
+      <p class="hero-description">A website with everything you need to get straight 100s on all vocab quizzes.</p>
       <div style="height:34px"></div>
       <p class="cta-description">The original document is still available here:</p>
       <div class="button-row">
-        <a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">Open bit.ly/h1vocab ↗</a>
+        <a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">Legacy Google Doc ↗</a>
       </div>
       <div style="height:14px"></div>
       <div class="button-row">
-        <button class="cta-button" onclick="showPage('important')">Explore All Study Tools ↓</button>
+        <button class="cta-button" onclick="showPage('important')">Explore Study Tools ↓</button>
       </div>
     </div>
   </section>
@@ -364,7 +363,7 @@ footer a{color:var(--accent)}
     <div class="container" style="text-align:center">
       <div class="eyebrow">Always one step ahead</div>
       <h2 class="section-title">All upcoming vocab is already here, <span class="highlight">even before</span> it's introduced in class.</h2>
-      <p class="section-copy" style="margin:20px auto">The entire Humanities I vocab, consisting of 225 terms, had arrived here while you were learning the first 45. Now, it is constantly being updated to bring more platforms and gamemodes.</p>
+      <p class="section-copy" style="margin:20px auto">The entire Humanities I vocab, consisting of 225 terms, had arrived here when you were learning the first 45. Now, it is constantly being updated to bring more platforms and gamemodes.</p>
     </div>
   </section>
 
@@ -373,7 +372,7 @@ footer a{color:var(--accent)}
       <h2 class="cta-title">It's seamless.<br>It's simple.<br><span class="highlight">It's FREE.</span></h2>
       <p class="cta-description">Pick your destination:</p>
       <div class="button-row">
-        <a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">bit.ly/h1vocab ↗</a>
+        <a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">Legacy Google Doc ↗</a>
         <button class="cta-button" onclick="showPage('important')">Explore Study Tools →</button>
       </div>
     </div>
@@ -398,7 +397,7 @@ footer a{color:var(--accent)}
     </section>
     <section class="resource-section">
       <h2 class="group-heading">Set 5 — October 19–26</h2>
-      <p class="group-subtitle">The newest vocabulary set listed in the document.</p>
+      <p class="group-subtitle">The newest vocabulary set that has been introduced.</p>
       <div class="resource-grid">
         <article class="resource-card"><span class="pill-label">Flashcards</span><h3>Humanities Vocab 5</h3><p>Quizlet · Aniket Eshan</p><a class="resource-button" style="background:#4257b2" href="https://quizlet.com/1201557438/humanities-vocab-5-flash-cards/?i=73x4vy&x=1jqt" target="_blank" rel="noopener noreferrer">Open Quizlet ↗</a></article>
         <article class="resource-card"><span class="pill-label">Game-based review</span><h3>Set 5 Vocabulary</h3><p>Gimkit · Aniket Eshan · Multiple choice</p><a class="resource-button" style="background:#00a86b" href="https://www.gimkit.com/view/6ab345dd28084d73414480b8" target="_blank" rel="noopener noreferrer">Open Gimkit ↗</a></article>
@@ -413,7 +412,7 @@ footer a{color:var(--accent)}
     <section class="page-heading">
       <div class="eyebrow">Play to learn</div>
       <h1 class="section-title">Gimkits.</h1>
-      <p>Choose a Gimkit below. The descriptions preserve the formats and credits listed in the original document.</p>
+      <p>Choose a Gimkit below.</p>
     </section>
     <div id="gimkit-list"></div>
   </div>
@@ -435,7 +434,7 @@ footer a{color:var(--accent)}
     <section class="page-heading">
       <div class="eyebrow">Review and memorize</div>
       <h1 class="section-title">Quizlets.</h1>
-      <p>All Quizlets below are credited to Aniket in the original document.</p>
+      <p>Choose a Quizlet below to get practicing.</p>
     </section>
     <section class="resource-section">
       <h2 class="group-heading">Complete vocabulary sets</h2>
@@ -454,7 +453,7 @@ footer a{color:var(--accent)}
         <button class="cta-button" onclick="showPage('test3')">Vocab Practice Test 3 →</button>
         <button class="cta-button" onclick="showPage('test4')">Vocab Practice Test 4 →</button>
       </div>
-      <div class="notice">These are the practice tests transcribed from the document. The answer keys stay hidden until you press the button.</div>
+      <div class="notice">These aren't real tests. They carry the sole purpose of practicing.<br>The answer keys stay hidden until you press the button.</div>
     </section>
   </div>
 </div>
@@ -469,7 +468,7 @@ footer a{color:var(--accent)}
     </section>
     <section class="test-block">
       <h3>Part 1 — Vocabulary in context</h3>
-      <div class="word-bank"><strong>Word bank</strong><br>ambiguous · lethargy · inane · sporadic · juxtapose<br>fritter · dissident · embellish · subsidize · inadvertent</div>
+      <div class="word-bank"><strong>Word bank</strong><br>juxtapose · inadvertent · lethargy · subsidize · ambiguous<br>embellish · sporadic · fritter · inane · dissident</div>
       <p class="question">Mia was walking to class when she noticed a note taped to her locker. It said, “Meet me after school in the library.” The message was <span class="blank"></span>, so she wasn't sure what it meant.</p>
       <p class="question">She showed the note to her friend Ben. He was feeling a lot of <span class="blank"></span> that morning and didn't seem very interested.</p>
       <p class="question">“Maybe it's just a joke,” Ben said.</p>
@@ -493,7 +492,7 @@ footer a{color:var(--accent)}
     </section>
     <section class="test-block">
       <h3>Part 3 — Fill in the blanks</h3>
-      <div class="word-bank"><strong>Word bank</strong><br>dexterous · collaborate · despondent · retrospect · ostentatious<br>discretion · detriment · instigate · sensory · scrupulous</div>
+      <div class="word-bank"><strong>Word bank</strong><br>scrupulous · instigate · dexterous · sensory · detriment<br>discretion · ostentatious · collaborate · retrospect · despondent</div>
       <p class="question">1. The chef was extremely <span class="blank"></span>, using his hands to prepare the complicated dish quickly.</p>
       <p class="question">2. The team decided to <span class="blank"></span> on the project instead of working separately.</p>
       <p class="question">3. After losing the competition, Jake felt <span class="blank"></span> for the rest of the afternoon.</p>
@@ -527,7 +526,7 @@ footer a{color:var(--accent)}
     </section>
     <section class="test-block">
       <h3>Part 1 — Vocabulary in context</h3>
-      <div class="word-bank"><strong>Word bank</strong><br>berate · estrange · euphoric · impetuous · infallible<br>maudlin · regress · relinquish · ubiquitous · zenith</div>
+      <div class="word-bank"><strong>Word bank</strong><br>ubiquitous · impetuous · relinquish · zenith · berate<br>infallible · maudlin · estrange · regress · euphoric</div>
       <p class="question">Ethan had been training for the school talent competition for months. On the afternoon of the competition, he felt <span class="blank"></span> when he learned that he had made it to the final round.</p>
       <p class="question">His excitement made him <span class="blank"></span>, and he rushed backstage without thinking carefully about where he was going. Unfortunately, he knocked over a microphone stand.</p>
       <p class="question">His teacher was angry and began to <span class="blank"></span> him for being careless. Ethan apologized. He believed that his teacher was <span class="blank"></span> and never made a mistake.</p>
@@ -548,7 +547,7 @@ footer a{color:var(--accent)}
     </section>
     <section class="test-block">
       <h3>Part 3 — Fill in the blanks</h3>
-      <div class="word-bank"><strong>Word bank</strong><br>detriment · dexterous · discretion · gregarious · optimum<br>ostentatious · resilient · vicarious · collaborate · ambiguous</div>
+      <div class="word-bank"><strong>Word bank</strong><br>vicarious · detriment · gregarious · ambiguous · resilient<br>discretion · collaborate · optimum · dexterous · ostentatious</div>
       <p class="question">1. The young artist was extremely <span class="blank"></span>, using his hands to create tiny details in his sculpture.</p>
       <p class="question">2. The two students decided to <span class="blank"></span> on their science project instead of working separately.</p>
       <p class="question">3. After losing the first game, the team remained <span class="blank"></span> and continued practicing for the next one.</p>
