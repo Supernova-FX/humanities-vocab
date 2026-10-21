@@ -1,543 +1,766 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>Humanities I Vocab Study Tools</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root {
---background: #ffffff;
---foreground: #202124;
---muted: #5f6368;
---accent: #1a73e8;
---accent-dark: #174ea6;
---header-height: 72px;
---page-padding: clamp(22px, 6vw, 88px);
---font-body: "Google Sans", Arial, sans-serif;
---font-display: "Inter", "Google Sans", Arial, sans-serif;
+  color-scheme: light;
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-soft:#f3f7ff;
+  --surface-card:#ffffff;
+  --fg:#202124;
+  --muted:#5f6368;
+  --accent:#1a73e8;
+  --accent-dark:#174ea6;
+  --accent-soft:#e8f0fe;
+  --line:#e1e7f0;
+  --field:#f8faff;
+  --answer-bg:#f1f7ff;
+  --notice-bg:#f8faff;
+  --shadow:0 4px 13px #1a73e81f;
+  --body:"Google Sans",Arial,sans-serif;
+  --display:"Inter","Google Sans",Arial,sans-serif;
+  --header-height:65px;
 }
 
-* {
-box-sizing: border-box;
+/* Automatically use dark mode when the visitor's device is in dark mode. */
+@media (prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme:dark;
+    --bg:#101114;
+    --surface:#181a20;
+    --surface-soft:#151922;
+    --surface-card:#1b1e26;
+    --fg:#f1f3f4;
+    --muted:#b1b7c2;
+    --accent:#8ab4f8;
+    --accent-dark:#aecbfa;
+    --accent-soft:#263750;
+    --line:#303641;
+    --field:#1b202b;
+    --answer-bg:#1c293b;
+    --notice-bg:#1b202b;
+    --shadow:0 4px 16px #00000035;
+  }
 }
 
-html {
-scroll-behavior: smooth;
-scroll-snap-type: y mandatory;
-scrollbar-width: none;
+/* Explicit theme overrides are temporary and last only for this visit. */
+:root[data-theme="light"] {
+  color-scheme:light;
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-soft:#f3f7ff;
+  --surface-card:#ffffff;
+  --fg:#202124;
+  --muted:#5f6368;
+  --accent:#1a73e8;
+  --accent-dark:#174ea6;
+  --accent-soft:#e8f0fe;
+  --line:#e1e7f0;
+  --field:#f8faff;
+  --answer-bg:#f1f7ff;
+  --notice-bg:#f8faff;
+  --shadow:0 4px 13px #1a73e81f;
+}
+:root[data-theme="dark"] {
+  color-scheme:dark;
+  --bg:#101114;
+  --surface:#181a20;
+  --surface-soft:#151922;
+  --surface-card:#1b1e26;
+  --fg:#f1f3f4;
+  --muted:#b1b7c2;
+  --accent:#8ab4f8;
+  --accent-dark:#aecbfa;
+  --accent-soft:#263750;
+  --line:#303641;
+  --field:#1b202b;
+  --answer-bg:#1c293b;
+  --notice-bg:#1b202b;
+  --shadow:0 4px 16px #00000035;
 }
 
-html::-webkit-scrollbar {
-display: none;
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--body);-webkit-font-smoothing:antialiased;
+  transition:background-color .22s,color .22s;
 }
+button,a{font:inherit}
+a{color:inherit}
+button{cursor:pointer}
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb,var(--bg) 91%,transparent);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:1200px;margin:auto;padding:12px 24px;
+  display:flex;align-items:center;gap:18px;min-height:65px;
+}
+.brand{
+  border:0;background:none;text-align:left;padding:0;
+  font-family:var(--display);font-weight:800;font-size:15px;
+  letter-spacing:-.04em;white-space:nowrap;color:var(--fg);
+}
+.brand span{color:var(--accent)}
+.nav{
+  display:flex;gap:5px;align-items:center;
+  overflow-x:auto;flex:1;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  border:0;border-radius:999px;background:transparent;
+  padding:10px 13px;color:var(--muted);font-size:13px;
+  font-weight:700;white-space:nowrap;transition:.18s;
+}
+.nav-btn:hover{background:var(--surface-soft);color:var(--accent)}
+.nav-btn.active{background:var(--accent-soft);color:var(--accent)}
+.theme-toggle{
+  flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;
+  gap:7px;border:1px solid var(--line);border-radius:999px;
+  padding:9px 12px;background:var(--surface-card);color:var(--fg);
+  font-size:12px;font-weight:800;white-space:nowrap;transition:.18s;
+}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+main{min-height:80vh}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.container{width:min(100% - 44px,1000px);margin:auto}
 
-body {
-margin: 0;
-color: var(--foreground);
-background: var(--background);
-font-family: var(--font-body);
--webkit-font-smoothing: antialiased;
+.hero-title,.section-title,.cta-title{
+  font-family:var(--display);font-weight:800;
+  letter-spacing:-.07em;line-height:1.08;
 }
+.hero-title{font-size:clamp(42px,8vw,86px);margin:0 0 24px}
+.highlight{color:var(--accent)}
+.hero-description{
+  color:var(--muted);font-size:clamp(16px,2vw,21px);
+  line-height:1.8;max-width:650px;margin:0 auto;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--accent);font-size:12px;font-weight:800;
+  letter-spacing:.13em;text-transform:uppercase;margin-bottom:20px;
+}
+.eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 
-.scene {
-position: relative;
-min-height: 100vh;
-min-height: 100svh;
-width: 100%;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-padding: calc(var(--header-height) + 26px) var(--page-padding) 48px;
-overflow: clip;
-isolation: isolate;
-scroll-snap-align: start;
-scroll-snap-stop: always;
-background: var(--background);
+/* Homepage section snapping: enabled only while Home is open. */
+html.home-snapping{scroll-snap-type:y mandatory}
+.home-scene,.home-section{
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  scroll-margin-top:var(--header-height);
 }
+.home-scene{
+  min-height:calc(100svh - var(--header-height));
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:70px 0;
+}
+.home-section{
+  min-height:100svh;display:flex;align-items:center;
+  padding:82px 0;
+}
+.home-section>.container{width:min(100% - 44px,1000px)}
+.section{padding:82px 0}
+.section.soft{background:var(--surface-soft)}
+.section-title{font-size:clamp(32px,5vw,54px);margin:0 0 16px}
+.section-copy{font-size:17px;color:var(--muted);line-height:1.8;max-width:720px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:42px}
+.stat{
+  padding:28px 18px;background:var(--surface-card);
+  border:1px solid var(--line);border-top:3px solid var(--accent);text-align:center;
+}
+.stat-number{
+  display:block;font-family:var(--display);font-size:clamp(36px,6vw,62px);
+  font-weight:800;color:var(--accent);letter-spacing:-.06em
+}
+.stat-label{display:block;font-weight:800;margin:10px 0}
+.stat p{font-size:13px;color:var(--muted);line-height:1.6;margin:0}
+.cta-title{font-size:clamp(38px,6vw,72px);margin:0 0 20px}
+.cta-description{color:var(--muted);font-size:18px;margin-bottom:26px}
+.button-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 
-.scene-inner {
-position: relative;
-z-index: 1;
-width: min(100%,1000px);
-margin: auto;
-text-align: center;
-opacity: var(--scene-opacity,1);
-transform: translateY(calc((1 - var(--scene-opacity,1)) * 22px));
-will-change: opacity,transform;
+.cta-button,.resource-button,.secondary-button{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:48px;padding:12px 23px;border:0;border-radius:999px;
+  background:var(--accent);color:#fff;text-decoration:none;
+  font-size:14px;font-weight:800;box-shadow:var(--shadow);
+  transition:background .18s,transform .18s,border-color .18s;
 }
+.cta-button:hover,.resource-button:hover{background:var(--accent-dark);transform:translateY(-2px)}
+.secondary-button{background:var(--accent-soft);color:var(--accent);box-shadow:none}
+.secondary-button:hover{filter:brightness(.96)}
 
-.eyebrow {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-margin-bottom: clamp(20px,3vh,30px);
-color: var(--accent);
-font-size: 12px;
-font-weight: 700;
-letter-spacing: .13em;
-text-transform: uppercase;
-}
+/* Platform-specific brand accents. */
+#page-gimkits{--platform:#00a86b;--platform-dark:#008452;--platform-soft:#e8f8f0;--platform-ink:#006b42}
+#page-blookets{--platform:#3986f6;--platform-dark:#2469d8;--platform-soft:#eaf2ff;--platform-ink:#2058b0}
+#page-quizlets{--platform:#4257b2;--platform-dark:#304397;--platform-soft:#edf0ff;--platform-ink:#344798}
 
-.eyebrow-dot {
-width: 7px;
-height: 7px;
-border-radius: 50%;
-background: currentColor;
+@media(prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) #page-gimkits{--platform:#4cdb9a;--platform-dark:#2cc587;--platform-soft:#173a2d;--platform-ink:#7ce7b5}
+  :root:not([data-theme="light"]) #page-blookets{--platform:#80b5ff;--platform-dark:#5b9bfa;--platform-soft:#1b304d;--platform-ink:#a9ceff}
+  :root:not([data-theme="light"]) #page-quizlets{--platform:#a2adff;--platform-dark:#8795ff;--platform-soft:#282d50;--platform-ink:#b9c2ff}
 }
+:root[data-theme="dark"] #page-gimkits{--platform:#4cdb9a;--platform-dark:#2cc587;--platform-soft:#173a2d;--platform-ink:#7ce7b5}
+:root[data-theme="dark"] #page-blookets{--platform:#80b5ff;--platform-dark:#5b9bfa;--platform-soft:#1b304d;--platform-ink:#a9ceff}
+:root[data-theme="dark"] #page-quizlets{--platform:#a2adff;--platform-dark:#8795ff;--platform-soft:#282d50;--platform-ink:#b9c2ff}
 
-h1,h2,p {
-margin-top: 0;
+.page-heading{padding:58px 0 28px}
+.page-heading .section-title{margin-bottom:12px}
+.page-heading p{color:var(--muted);font-size:16px;line-height:1.75;max-width:750px}
+.resource-section{padding:24px 0 42px}
+.group-heading{
+  font-family:var(--display);font-size:23px;letter-spacing:-.04em;
+  margin:0 0 18px;
 }
-
-.hero-title {
-max-width: 920px;
-margin: 0 auto 24px;
-font-family: var(--font-display);
-font-size: clamp(38px,7.2vw,88px);
-font-weight: 700;
-line-height: 1.06;
-letter-spacing: -.075em;
-text-wrap: balance;
+.group-subtitle{color:var(--muted);font-size:14px;margin:-8px 0 18px}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:15px}
+.resource-card{
+  padding:21px;border:1px solid var(--line);border-radius:16px;
+  background:var(--surface-card);display:flex;flex-direction:column;align-items:flex-start;
+  gap:12px;min-width:0;transition:border-color .18s,background-color .18s;
 }
-
-.highlight {
-color: var(--accent);
+.resource-card h3{font-size:16px;line-height:1.45;margin:0;color:var(--fg)}
+.resource-card p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.resource-button{min-height:42px;padding:10px 18px;font-size:13px;margin-top:auto}
+.platform-page .resource-card{border-top:3px solid var(--platform)}
+.platform-page .resource-button{background:var(--platform);box-shadow:none}
+.platform-page .resource-button:hover{background:var(--platform-dark)}
+.platform-page .group-heading{color:var(--platform-ink)}
+.platform-page .eyebrow{color:var(--platform-ink)}
+.platform-page .page-heading .section-title{color:var(--accent)}
+.pill-label{
+  display:inline-block;padding:5px 10px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:800;
 }
-
-.hero-description {
-max-width: 620px;
-margin: 0 auto;
-color: var(--muted);
-font-size: clamp(16px,1.9vw,21px);
-line-height: 1.75;
-text-wrap: balance;
+.resource-button:focus-visible,.cta-button:focus-visible,.nav-btn:focus-visible,
+button:focus-visible,.theme-toggle:focus-visible{
+  outline:3px solid var(--accent);outline-offset:3px;
 }
-
-.section-heading {
-margin: 0 auto 15px;
-font-family: var(--font-display);
-font-size: clamp(30px,5vw,54px);
-font-weight: 700;
-line-height: 1.12;
-letter-spacing: -.06em;
-text-wrap: balance;
+.test-nav{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0}
+.test-content{max-width:850px}
+.test-block{
+  padding:clamp(20px,4vw,34px);border:1px solid var(--line);
+  border-radius:18px;margin:22px 0;background:var(--surface-card);
 }
-
-.stats-grid {
-display: grid;
-grid-template-columns: repeat(3,minmax(0,1fr));
-gap: clamp(12px,2vw,24px);
-width: min(100%,900px);
-margin: clamp(32px,6vh,58px) auto 0;
+.test-block h3{font-family:var(--display);font-size:22px;letter-spacing:-.04em;margin:0 0 16px}
+.word-bank{padding:16px 18px;background:var(--surface-soft);border:1px solid var(--line);border-radius:12px;line-height:1.9;margin:15px 0 22px}
+.question{line-height:1.85;margin:16px 0}
+.blank{display:inline-block;min-width:95px;border-bottom:1px solid #7c8798}
+.answer-toggle{margin-top:18px}
+.answer-key{display:none;margin-top:22px;padding:20px;background:var(--answer-bg);border:1px solid var(--line);border-radius:14px;line-height:1.9}
+.answer-key.visible{display:block}
+.answer-key h4{margin:12px 0 4px}
+.answer-key ol{padding-left:23px}
+.notice{padding:17px 20px;background:var(--notice-bg);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;color:var(--muted);line-height:1.7}
+footer{border-top:1px solid var(--line);padding:26px 22px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8;background:var(--bg)}
+footer a{color:var(--accent)}
+@media(max-width:850px){
+  .topbar-inner{gap:10px;flex-wrap:wrap}
+  .nav{order:3;flex-basis:100%}
+  .theme-toggle{margin-left:auto}
+  :root{--header-height:108px}
 }
-
-.stat {
-min-width: 0;
-padding: clamp(20px,3vw,36px) 10px;
-border-top: 2px solid var(--accent);
-background: #f8faff;
+@media(max-width:720px){
+  .topbar-inner{align-items:center;gap:10px;padding:12px 16px}
+  .nav{width:100%;flex:none}
+  .nav-btn{padding:9px 11px}
+  .container,.home-section>.container{width:min(100% - 32px,1000px)}
+  .home-scene{min-height:calc(100svh - var(--header-height));padding:55px 0}
+  .home-section{min-height:100svh;padding:58px 0}
+  .section{padding:58px 0}
+  .stats{gap:9px}
+  .stat{padding:19px 7px}
+  .stat-label{font-size:12px}
+  .stat p{font-size:10px}
+  .resource-grid{grid-template-columns:1fr}
+  .theme-toggle{font-size:11px;padding:8px 10px}
 }
-
-.stat-number {
-display: block;
-margin-bottom: 12px;
-color: var(--accent);
-font-family: var(--font-display);
-font-size: clamp(35px,6.2vw,68px);
-font-weight: 700;
-line-height: 1;
-letter-spacing: -.07em;
-font-variant-numeric: tabular-nums;
+@media(max-width:420px){
+  .brand{font-size:13px}
+  .nav{gap:2px}
+  .nav-btn{font-size:12px;padding:8px 9px}
+  .theme-toggle{gap:4px}
 }
-
-.stat-label {
-display: block;
-margin-bottom: 10px;
-font-size: clamp(13px,1.5vw,17px);
-font-weight: 700;
-}
-
-.stat-description {
-max-width: 220px;
-margin: 0 auto;
-color: var(--muted);
-font-size: clamp(11px,1.2vw,14px);
-line-height: 1.65;
-}
-
-.upcoming-scene {
-background: #f8faff;
-}
-
-.upcoming-scene .scene-inner {
-width: min(100%,900px);
-}
-
-.upcoming-title {
-margin: 0 auto 30px;
-font-family: var(--font-display);
-font-size: clamp(34px,6.4vw,72px);
-font-weight: 700;
-line-height: 1.12;
-letter-spacing: -.07em;
-text-wrap: balance;
-}
-
-.upcoming-copy {
-max-width: 740px;
-margin: 0 auto;
-color: var(--muted);
-font-size: clamp(15px,1.8vw,20px);
-line-height: 1.9;
-text-wrap: balance;
-}
-
-.cta-title {
-max-width: 850px;
-margin: 0 auto 22px;
-font-family: var(--font-display);
-font-size: clamp(35px,6.6vw,76px);
-font-weight: 700;
-line-height: 1.13;
-letter-spacing: -.07em;
-text-wrap: balance;
-}
-
-.cta-description {
-margin: 0 auto 34px;
-color: var(--muted);
-font-size: clamp(15px,1.8vw,20px);
-line-height: 1.7;
-}
-
-.cta-button {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-gap: 12px;
-min-height: 56px;
-padding: 0 28px;
-border: 0;
-border-radius: 999px;
-color: white;
-background: var(--accent);
-font-family: var(--font-body);
-font-size: 15px;
-font-weight: 700;
-text-decoration: none;
-box-shadow: 0 5px 16px rgba(26,115,232,.18);
-transition: background 180ms ease,transform 180ms ease;
-}
-
-.cta-button:hover {
-background: var(--accent-dark);
-transform: translateY(-2px);
-}
-
-.progress-dots {
-position: fixed;
-z-index: 110;
-top: 50%;
-right: clamp(12px,2.2vw,28px);
-transform: translateY(-50%);
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 12px;
-}
-
-.progress-dot {
-display: block;
-width: 7px;
-height: 7px;
-padding: 0;
-border: 0;
-border-radius: 999px;
-background: #dadce0;
-cursor: pointer;
-transition: height 250ms ease,background 250ms ease;
-}
-
-.progress-dot[aria-current="true"] {
-height: 25px;
-background: var(--accent);
-}
-
-@media (max-width:600px) {
-:root {
---header-height: 62px;
---page-padding: 23px;
-}
-
-.scene {
-padding-bottom: 62px;
-}
-
-.stats-grid {
-gap: 8px;
-margin-top: 30px;
-}
-
-.stat {
-padding: 19px 7px;
-}
-
-.stat-number {
-font-size: clamp(30px,10vw,43px);
-}
-
-.stat-label {
-font-size: 12px;
-}
-
-.stat-description {
-font-size: 10px;
-line-height: 1.5;
-}
-
-.progress-dots {
-right: 7px;
-gap: 10px;
-}
-
-.progress-dot {
-width: 5px;
-height: 5px;
-}
-
-.progress-dot[aria-current="true"] {
-height: 19px;
-}
-
-}
-
-@media (max-height:650px) {
-:root {
---header-height: 56px;
-}
-
-.scene {
-padding-top: calc(var(--header-height) + 12px);
-padding-bottom: 36px;
-}
-
-.eyebrow {
-margin-bottom: 13px;
-}
-
-.hero-title {
-margin-bottom: 14px;
-}
-
-.stats-grid {
-margin-top: 24px;
-}
-
-.stat {
-padding-top: 16px;
-padding-bottom: 16px;
-}
-
-.stat-number {
-margin-bottom: 7px;
-}
-
-.stat-label {
-margin-bottom: 6px;
-}
-
-}
-
-@media (prefers-reduced-motion:reduce) {
-html {
-scroll-behavior: auto;
-}
-
-*,
-*::before,
-*::after {
-transition-duration: .01ms !important;
-animation-duration: .01ms !important;
-animation-iteration-count: 1 !important;
-}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html.home-snapping{scroll-snap-type:none}
 }
 </style>
 </head>
 
 <body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="brand" onclick="showPage('home')">Humanities I <span>Vocab</span></button>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-btn active" data-page="home">Home</button>
+      <button class="nav-btn" data-page="important">Start Here</button>
+      <button class="nav-btn" data-page="gimkits">Gimkits</button>
+      <button class="nav-btn" data-page="blookets">Blookets</button>
+      <button class="nav-btn" data-page="quizlets">Quizlets</button>
+      <button class="nav-btn" data-page="tests">Practice Tests</button>
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme">☾ Dark mode</button>
+  </div>
+</header>
 
-<nav class="progress-dots" aria-label="Page sections">
-<button class="progress-dot" data-target="home" aria-label="Go to introduction" aria-current="true"></button>
-<button class="progress-dot" data-target="stats" aria-label="Go to statistics" aria-current="false"></button>
-<button class="progress-dot" data-target="upcoming" aria-label="Go to upcoming vocabulary" aria-current="false"></button>
-<button class="progress-dot" data-target="cta" aria-label="Go to the study tools" aria-current="false"></button>
-</nav>
+<main>
+<div class="page active" id="page-home">
+  <section class="home-scene">
+    <div class="container">
+      <h1 class="hero-title">Humanities I<br><span class="highlight">Vocab Study Tools</span></h1>
+      <p class="hero-description">A Google Doc with everything you need to get straight 100s on all vocab quizzes.</p>
+      <div style="height:34px"></div>
+      <p class="cta-description">The original document is still available here:</p>
+      <div class="button-row">
+        <a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">Open bit.ly/h1vocab ↗</a>
+      </div>
+      <div style="height:14px"></div>
+      <div class="button-row">
+        <button class="cta-button" onclick="showPage('important')">Explore All Study Tools ↓</button>
+      </div>
+    </div>
+  </section>
 
-<main id="presentation">
+  <section class="home-section section soft">
+    <div class="container" style="text-align:center">
+      <div class="eyebrow">The stats</div>
+      <h2 class="section-title">The numbers say it all.</h2>
+      <div class="stats">
+        <article class="stat">
+          <strong class="stat-number">40</strong>
+          <span class="stat-label">resources</span>
+          <p>Quizlets, Gimkits, Blookets, sample tests, and more</p>
+        </article>
+        <article class="stat">
+          <strong class="stat-number">63</strong>
+          <span class="stat-label">users</span>
+          <p>Over 70% of Humanities I students</p>
+        </article>
+        <article class="stat">
+          <strong class="stat-number">244</strong>
+          <span class="stat-label">visits</span>
+          <p>As of October 20</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<section class="scene" id="home" aria-labelledby="hero-title">
-<div class="scene-inner">
-<h1 class="hero-title" id="hero-title">Humanities I<br><span class="highlight">Vocab Study Tools</span></h1>
-<p class="hero-description">A Google Doc with everything you need to get straight 100s on all vocab quizzes.</p>
+  <section class="home-section section">
+    <div class="container" style="text-align:center">
+      <div class="eyebrow">Always one step ahead</div>
+      <h2 class="section-title">All upcoming vocab is already here, <span class="highlight">even before</span> it's introduced in class.</h2>
+      <p class="section-copy" style="margin:20px auto">The entire Humanities I vocab, consisting of 225 terms, had arrived here while you were learning the first 45. Now, it is constantly being updated to bring more platforms and gamemodes.</p>
+    </div>
+  </section>
+
+  <section class="home-section section soft">
+    <div class="container" style="text-align:center">
+      <h2 class="cta-title">It's seamless.<br>It's simple.<br><span class="highlight">It's FREE.</span></h2>
+      <p class="cta-description">Pick your destination:</p>
+      <div class="button-row">
+        <a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">bit.ly/h1vocab ↗</a>
+        <button class="cta-button" onclick="showPage('important')">Explore Study Tools →</button>
+      </div>
+    </div>
+  </section>
 </div>
-</section>
 
-<section class="scene" id="stats" aria-labelledby="stats-title">
-<div class="scene-inner">
-<div class="eyebrow"><span class="eyebrow-dot"></span> The stats</div>
-<h2 class="section-heading" id="stats-title">The numbers say it all.</h2>
-
-<div class="stats-grid">
-<article class="stat">
-<strong class="stat-number">40</strong>
-<span class="stat-label">resources</span>
-<p class="stat-description">Quizlets, Gimkits, Blookets, sample tests, and more</p>
-</article>
-
-<article class="stat">
-<strong class="stat-number">63</strong>
-<span class="stat-label">users</span>
-<p class="stat-description">Over 70% of Humanities I students</p>
-</article>
-
-<article class="stat">
-<strong class="stat-number">244</strong>
-<span class="stat-label">visits</span>
-<p class="stat-description">As of October 20</p>
-</article>
+<div class="page" id="page-important">
+  <div class="container">
+    <section class="page-heading">
+      <div class="eyebrow">The essentials</div>
+      <h1 class="section-title">Start <span class="highlight">Here.</span></h1>
+      <p>Need the current set or a quick review of everything learned so far? These are the three platform links for each collection.</p>
+    </section>
+    <section class="resource-section">
+      <h2 class="group-heading">All Sets So Far (1–5)</h2>
+      <p class="group-subtitle">Review all vocabulary covered so far in one place.</p>
+      <div class="resource-grid">
+        <article class="resource-card"><span class="pill-label">Flashcards</span><h3>All Vocab To This Point (Sets 1–5)</h3><p>Quizlet · Aniket Eshan</p><a class="resource-button" href="https://quizlet.com/1218839233/all-vocab-to-this-point-flash-cards/?i=73x4vy&x=1jqt" target="_blank" rel="noopener noreferrer">Open Quizlet ↗</a></article>
+        <article class="resource-card"><span class="pill-label">Game-based review</span><h3>All Vocab To This Point (Sets 1–5)</h3><p>Gimkit · Aniket Eshan · Multiple choice</p><a class="resource-button" style="background:#00a86b" href="https://www.gimkit.com/view/6ac5783a69aaf5afdeecb43b" target="_blank" rel="noopener noreferrer">Open Gimkit ↗</a></article>
+        <article class="resource-card"><span class="pill-label">Game-based review</span><h3>All Vocab To This Point (Sets 1–5)</h3><p>Blooket · Aniket Eshan · Multiple choice</p><a class="resource-button" style="background:#3986f6" href="https://dashboard.blooket.com/set/6ac5791893a10043dbaffa47" target="_blank" rel="noopener noreferrer">Open Blooket ↗</a></article>
+      </div>
+    </section>
+    <section class="resource-section">
+      <h2 class="group-heading">Set 5 — October 19–26</h2>
+      <p class="group-subtitle">The newest vocabulary set listed in the document.</p>
+      <div class="resource-grid">
+        <article class="resource-card"><span class="pill-label">Flashcards</span><h3>Humanities Vocab 5</h3><p>Quizlet · Aniket Eshan</p><a class="resource-button" style="background:#4257b2" href="https://quizlet.com/1201557438/humanities-vocab-5-flash-cards/?i=73x4vy&x=1jqt" target="_blank" rel="noopener noreferrer">Open Quizlet ↗</a></article>
+        <article class="resource-card"><span class="pill-label">Game-based review</span><h3>Set 5 Vocabulary</h3><p>Gimkit · Aniket Eshan · Multiple choice</p><a class="resource-button" style="background:#00a86b" href="https://www.gimkit.com/view/6ab345dd28084d73414480b8" target="_blank" rel="noopener noreferrer">Open Gimkit ↗</a></article>
+        <article class="resource-card"><span class="pill-label">Game-based review</span><h3>Set 5 Vocabulary</h3><p>Blooket · Aniket Eshan · Multiple choice</p><a class="resource-button" style="background:#3986f6" href="https://dashboard.blooket.com/set/6ab34486185db742088aef56" target="_blank" rel="noopener noreferrer">Open Blooket ↗</a></article>
+      </div>
+    </section>
+  </div>
 </div>
-</div>
-</section>
 
-<section class="scene upcoming-scene" id="upcoming" aria-labelledby="upcoming-title">
-<div class="scene-inner">
-<div class="eyebrow"><span class="eyebrow-dot"></span> Always one step ahead</div>
-<h2 class="upcoming-title" id="upcoming-title">All upcoming vocab is already here, <span class="highlight">even before</span> it's introduced in class.</h2>
-<p class="upcoming-copy">The entire Humanities I vocab, consisting of 225 terms, had arrived here while you were learning the first 45.</p>
+<div class="page platform-page" id="page-gimkits">
+  <div class="container">
+    <section class="page-heading">
+      <div class="eyebrow">Play to learn</div>
+      <h1 class="section-title">Gimkits.</h1>
+      <p>Choose a Gimkit below. The descriptions preserve the formats and credits listed in the original document.</p>
+    </section>
+    <div id="gimkit-list"></div>
+  </div>
 </div>
-</section>
 
-<section class="scene" id="cta" aria-labelledby="cta-title">
-<div class="scene-inner">
-<div class="eyebrow"><span class="eyebrow-dot"></span> Your next quiz starts here</div>
-<h2 class="cta-title" id="cta-title">And the best part?<br>It's seamless.<br>It's simple.<br><span class="highlight">It's FREE.</span></h2>
-<p class="cta-description">Check it out now:</p>
-<a class="cta-button" href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">bit.ly/h1vocab</a>
+<div class="page platform-page" id="page-blookets">
+  <div class="container">
+    <section class="page-heading">
+      <div class="eyebrow">Play to learn</div>
+      <h1 class="section-title">Blookets.</h1>
+      <p>Choose a Blooket to practice the vocabulary in a game format.</p>
+    </section>
+    <div id="blooket-list"></div>
+  </div>
 </div>
-</section>
 
+<div class="page platform-page" id="page-quizlets">
+  <div class="container">
+    <section class="page-heading">
+      <div class="eyebrow">Review and memorize</div>
+      <h1 class="section-title">Quizlets.</h1>
+      <p>All Quizlets below are credited to Aniket in the original document.</p>
+    </section>
+    <section class="resource-section">
+      <h2 class="group-heading">Complete vocabulary sets</h2>
+      <div class="resource-grid" id="quizlet-list"></div>
+    </section>
+  </div>
+</div>
+
+<div class="page" id="page-tests">
+  <div class="container">
+    <section class="page-heading">
+      <div class="eyebrow">Test your knowledge</div>
+      <h1 class="section-title">Practice <span class="highlight">Tests.</span></h1>
+      <p>Choose a sample test. Try answering the questions first, then reveal the answer key when you're ready to check your work.</p>
+      <div class="test-nav">
+        <button class="cta-button" onclick="showPage('test3')">Vocab Practice Test 3 →</button>
+        <button class="cta-button" onclick="showPage('test4')">Vocab Practice Test 4 →</button>
+      </div>
+      <div class="notice">These are the practice tests transcribed from the document. The answer keys stay hidden until you press the button.</div>
+    </section>
+  </div>
+</div>
+
+<div class="page" id="page-test3">
+  <div class="container test-content">
+    <section class="page-heading">
+      <button class="secondary-button" onclick="showPage('tests')">← Back to Practice Tests</button>
+      <div style="height:25px"></div>
+      <div class="eyebrow">Sample quiz · Made by Aniket Eshan</div>
+      <h1 class="section-title">Humanities Vocab <span class="highlight">3.</span></h1>
+    </section>
+    <section class="test-block">
+      <h3>Part 1 — Vocabulary in context</h3>
+      <div class="word-bank"><strong>Word bank</strong><br>ambiguous · lethargy · inane · sporadic · juxtapose<br>fritter · dissident · embellish · subsidize · inadvertent</div>
+      <p class="question">Mia was walking to class when she noticed a note taped to her locker. It said, “Meet me after school in the library.” The message was <span class="blank"></span>, so she wasn't sure what it meant.</p>
+      <p class="question">She showed the note to her friend Ben. He was feeling a lot of <span class="blank"></span> that morning and didn't seem very interested.</p>
+      <p class="question">“Maybe it's just a joke,” Ben said.</p>
+      <p class="question">“That sounds <span class="blank"></span>,” Mia replied.</p>
+      <p class="question">After school, Mia went to the library. She noticed a few students talking in quiet groups. Their meetings were <span class="blank"></span>, happening on some days but not others.</p>
+      <p class="question">Mia decided to <span class="blank"></span> the old school map with a newer one. She wanted to see if anything had changed.</p>
+      <p class="question">She spent several minutes trying to <span class="blank"></span> time by looking through old books, but eventually she found what she was looking for.</p>
+      <p class="question">An old student had written about a <span class="blank"></span> who had disagreed with the school's rules many years ago.</p>
+      <p class="question">Mia decided to <span class="blank"></span> the story when she told Ben about it, adding a few small details to make it sound more exciting.</p>
+      <p class="question">The school had recently received money to <span class="blank"></span> a new reading program, so Mia wondered if the mystery had something to do with it.</p>
+      <p class="question">As she left the library, she made an <span class="blank"></span> mistake and dropped the note on the floor.</p>
+    </section>
+    <section class="test-block">
+      <h3>Part 2 — Prefix meanings</h3>
+      <p class="question">1. international — <strong>inter-</strong> = <span class="blank"></span></p>
+      <p class="question">2. intramural — <strong>intra-</strong> = <span class="blank"></span></p>
+      <p class="question">3. introduction — <strong>intro-</strong> = <span class="blank"></span></p>
+      <p class="question">4. malfunction — <strong>mal-</strong> = <span class="blank"></span></p>
+      <p class="question">5. misunderstand — <strong>mis-</strong> = <span class="blank"></span></p>
+      <p class="question">6. postwar — <strong>post-</strong> = <span class="blank"></span></p>
+    </section>
+    <section class="test-block">
+      <h3>Part 3 — Fill in the blanks</h3>
+      <div class="word-bank"><strong>Word bank</strong><br>dexterous · collaborate · despondent · retrospect · ostentatious<br>discretion · detriment · instigate · sensory · scrupulous</div>
+      <p class="question">1. The chef was extremely <span class="blank"></span>, using his hands to prepare the complicated dish quickly.</p>
+      <p class="question">2. The team decided to <span class="blank"></span> on the project instead of working separately.</p>
+      <p class="question">3. After losing the competition, Jake felt <span class="blank"></span> for the rest of the afternoon.</p>
+      <p class="question">4. Looking back in <span class="blank"></span>, she realized that she had made the right choice.</p>
+      <p class="question">5. The bright decorations were so <span class="blank"></span> that everyone noticed them immediately.</p>
+      <p class="question">6. The two groups had to use <span class="blank"></span> to decide how to divide the money fairly.</p>
+      <p class="question">7. The new safety rules were created to prevent accidents that could be a serious <span class="blank"></span> to the workers.</p>
+      <p class="question">8. The students tried to <span class="blank"></span> a food fight in the cafeteria.</p>
+      <p class="question">9. The smell of fresh bread gave the room a pleasant <span class="blank"></span> experience.</p>
+      <p class="question">10. The teacher asked everyone to remain <span class="blank"></span> and truthful when answering the questions.</p>
+      <button class="cta-button answer-toggle" onclick="toggleKey('key3',this)" aria-expanded="false">Show Answer Key</button>
+      <div class="answer-key" id="key3">
+        <h4>Part 1</h4>
+        <ol><li>ambiguous</li><li>lethargy</li><li>inane</li><li>sporadic</li><li>juxtapose</li><li>fritter</li><li>dissident</li><li>embellish</li><li>subsidize</li><li>inadvertent</li></ol>
+        <h4>Part 2</h4>
+        <ol><li>inter- = between</li><li>intra- = within</li><li>intro- = into or inward</li><li>mal- = bad or wrong</li><li>mis- = bad or wrong</li><li>post- = after</li></ol>
+        <h4>Part 3</h4>
+        <ol><li>dexterous</li><li>collaborate</li><li>despondent</li><li>retrospect</li><li>ostentatious</li><li>discretion</li><li>detriment</li><li>instigate</li><li>sensory</li><li>scrupulous</li></ol>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="page" id="page-test4">
+  <div class="container test-content">
+    <section class="page-heading">
+      <button class="secondary-button" onclick="showPage('tests')">← Back to Practice Tests</button>
+      <div style="height:25px"></div>
+      <div class="eyebrow">Sample quiz · Made by Aniket Eshan</div>
+      <h1 class="section-title">Humanities Vocab <span class="highlight">4.</span></h1>
+    </section>
+    <section class="test-block">
+      <h3>Part 1 — Vocabulary in context</h3>
+      <div class="word-bank"><strong>Word bank</strong><br>berate · estrange · euphoric · impetuous · infallible<br>maudlin · regress · relinquish · ubiquitous · zenith</div>
+      <p class="question">Ethan had been training for the school talent competition for months. On the afternoon of the competition, he felt <span class="blank"></span> when he learned that he had made it to the final round.</p>
+      <p class="question">His excitement made him <span class="blank"></span>, and he rushed backstage without thinking carefully about where he was going. Unfortunately, he knocked over a microphone stand.</p>
+      <p class="question">His teacher was angry and began to <span class="blank"></span> him for being careless. Ethan apologized. He believed that his teacher was <span class="blank"></span> and never made a mistake.</p>
+      <p class="question">That evening, the principal gave a <span class="blank"></span> speech about how much the students had grown throughout the year. Some students became emotional as they listened.</p>
+      <p class="question">After the competition, Ethan had an argument with one of his closest friends. He worried that the disagreement might <span class="blank"></span> them and make their friendship weaker.</p>
+      <p class="question">The next morning, Ethan decided that he did not want to <span class="blank"></span> to his old habit of giving up whenever something went wrong. Instead, he promised himself that he would keep practicing.</p>
+      <p class="question">Even when his coach suggested that he <span class="blank"></span> his place in the competition to another student, Ethan refused to give up.</p>
+      <p class="question">As he walked through the school, he noticed that posters advertising the competition were <span class="blank"></span>. They were hanging on nearly every wall and classroom door.</p>
+      <p class="question">When Ethan finally performed that evening, he gave the best performance of his life. Winning the competition felt like the <span class="blank"></span> of his entire year.</p>
+    </section>
+    <section class="test-block">
+      <h3>Part 2 — Word-part meanings</h3>
+      <p class="question">1. incapable — <strong>in-</strong> = <span class="blank"></span></p>
+      <p class="question">2. hazard — <strong>-ard</strong> = <span class="blank"></span></p>
+      <p class="question">3. musician — <strong>-ician</strong> = <span class="blank"></span></p>
+      <p class="question">4. tonsillitis — <strong>-itis</strong> = <span class="blank"></span></p>
+      <p class="question">5. aquamarine — <strong>aqua-</strong> = <span class="blank"></span></p>
+    </section>
+    <section class="test-block">
+      <h3>Part 3 — Fill in the blanks</h3>
+      <div class="word-bank"><strong>Word bank</strong><br>detriment · dexterous · discretion · gregarious · optimum<br>ostentatious · resilient · vicarious · collaborate · ambiguous</div>
+      <p class="question">1. The young artist was extremely <span class="blank"></span>, using his hands to create tiny details in his sculpture.</p>
+      <p class="question">2. The two students decided to <span class="blank"></span> on their science project instead of working separately.</p>
+      <p class="question">3. After losing the first game, the team remained <span class="blank"></span> and continued practicing for the next one.</p>
+      <p class="question">4. The lack of sleep became a serious <span class="blank"></span> to his performance in the competition.</p>
+      <p class="question">5. The teacher trusted Marcus's <span class="blank"></span> when he had to decide how to handle the difficult situation.</p>
+      <p class="question">6. The coach wanted the players to be in their <span class="blank"></span> condition before the championship game.</p>
+      <p class="question">7. The decorations at the party were so <span class="blank"></span> that they immediately caught everyone's attention.</p>
+      <p class="question">8. Because Marcus was so <span class="blank"></span>, he easily made friends with the other students.</p>
+      <p class="question">9. By watching his brother compete in the tournament, he had a <span class="blank"></span> experience of what it was like to be an athlete.</p>
+      <p class="question">10. The instructions were <span class="blank"></span>, so the students were unsure about exactly what they were supposed to do.</p>
+      <button class="cta-button answer-toggle" onclick="toggleKey('key4',this)" aria-expanded="false">Show Answer Key</button>
+      <div class="answer-key" id="key4">
+        <h4>Part 1</h4>
+        <ol><li>euphoric</li><li>impetuous</li><li>berate</li><li>infallible</li><li>maudlin</li><li>estrange</li><li>regress</li><li>relinquish</li><li>ubiquitous</li><li>zenith</li></ol>
+        <h4>Part 2</h4>
+        <ol><li>in- = not or into</li><li>-ard = one who does</li><li>-ician = one who specializes in</li><li>-itis = inflammation</li><li>aqua- = water</li></ol>
+        <h4>Part 3</h4>
+        <ol><li>dexterous</li><li>collaborate</li><li>resilient</li><li>detriment</li><li>discretion</li><li>optimum</li><li>ostentatious</li><li>gregarious</li><li>vicarious</li><li>ambiguous</li></ol>
+      </div>
+    </section>
+  </div>
+</div>
 </main>
 
+<footer>
+  Humanities I Vocab Study Tools<br>
+  Original Google Doc: <a href="https://bit.ly/h1vocab" target="_blank" rel="noopener noreferrer">bit.ly/h1vocab</a>
+</footer>
+
 <script>
-(() => {
-const scenes = [...document.querySelectorAll(".scene")];
-const dots = [...document.querySelectorAll(".progress-dot")];
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-let ticking = false;
+const quizlets = [
+  ["All Vocab To This Point (Sets 1–5)","https://quizlet.com/1218839233/all-vocab-to-this-point-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 1","https://quizlet.com/1201554390/humanities-vocab-1-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 2","https://quizlet.com/1201556840/humanities-vocab-2-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 3","https://quizlet.com/1201557185/humanities-vocab-3-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 4","https://quizlet.com/1201557320/humanities-vocab-4-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 5","https://quizlet.com/1201557438/humanities-vocab-5-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 6","https://quizlet.com/1201557558/humanities-vocab-6-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 7","https://quizlet.com/1201557657/humanities-vocab-7-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 8","https://quizlet.com/1201557783/humanities-vocab-8-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 9","https://quizlet.com/1201557898/humanities-vocab-9-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 10","https://quizlet.com/1201558092/humanities-vocab-10-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 11","https://quizlet.com/1201558264/humanities-vocab-11-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 12","https://quizlet.com/1201558414/humanities-vocab-12-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 13","https://quizlet.com/1201558550/humanities-vocab-13-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 14","https://quizlet.com/1201558678/humanities-vocab-14-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Set 15","https://quizlet.com/1201558784/humanities-vocab-15-flash-cards/?i=73x4vy&x=1jqt"],
+  ["Master Set (1–15)","https://quizlet.com/1201559509/humanities-vocab-master-set-1-15-flash-cards/?i=73x4vy&x=1jqt"]
+];
 
-function updateScenes() {
-const viewportHeight = window.innerHeight;
-const viewportCenter = viewportHeight / 2;
-let activeIndex = 0;
-let smallestDistance = Infinity;
+const gimkits = [
+  ["All Vocab To This Point (Sets 1–5)","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ac5783a69aaf5afdeecb43b"],
+  ["Set 1","Parker Pecorino","Mostly text input, with a few multiple choice","https://www.gimkit.com/view/6a8488250bb94fbfde50639a"],
+  ["Set 1","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6a84a3b5299c38618c3fc36a"],
+  ["Set 2","Jimmy Shao","Multiple choice","https://www.gimkit.com/view/6a8cce28262acd7a75ca67a0"],
+  ["Set 3","Jimmy Shao","Multiple choice","https://www.gimkit.com/view/6aa9c389c85d509b8763212d"],
+  ["Set 4","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ab344b7cad6d2198e2a22e8"],
+  ["Set 5","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ab345dd28084d73414480b8"],
+  ["Set 6","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ac421a15201e8c412c992ef"],
+  ["Set 7","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ac422757e7a83a2e383fe48"],
+  ["Set 8","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ac422fc5ea77322a91f2d44"],
+  ["Set 9","Aniket Eshan","Multiple choice","https://www.gimkit.com/view/6ac4242a7e7a83a2e386782a"]
+];
 
-scenes.forEach((scene, index) => {
-const rect = scene.getBoundingClientRect();
-const sceneCenter = rect.top + rect.height / 2;
-const distance = Math.abs(sceneCenter - viewportCenter);
+const blookets = [
+  ["All Vocab To This Point (Sets 1–5)","Aniket Eshan","Multiple choice","https://dashboard.blooket.com/set/6ac5791893a10043dbaffa47"],
+  ["Set 1","Aniket Eshan","Multiple choice","https://dashboard.blooket.com/set/6a9a3148e097dd089db3b3fb"],
+  ["Set 1","Kayla Tran","Text input with multiple correct phrases","https://dashboard.blooket.com/set/6a85343aaa52753c4b9337a3"],
+  ["Set 2","Aniket Eshan","Multiple choice","https://dashboard.blooket.com/set/6a9a31e7c892c696c60e63d7"],
+  ["Set 2","Kayla Tran","Text input with multiple correct phrases","https://dashboard.blooket.com/set/6a8db6f77bfa6acc68029070"],
+  ["Set 3","Aniket Eshan","Multiple choice","https://dashboard.blooket.com/set/6a9a2ed2c892c696c60e6360"],
+  ["Set 3","Kayla Tran","Text input with multiple correct phrases","https://dashboard.blooket.com/set/6aa987ab677d7d6c29ce7e5a"],
+  ["Set 4","Aniket Eshan","Multiple choice","https://dashboard.blooket.com/set/6a9a30ade913ded5ebce3fa5"],
+  ["Set 4","Kayla Tran","Text input with multiple correct phrases","https://dashboard.blooket.com/set/6abdc36457cf95fe4723aeef"],
+  ["Set 5","Aniket Eshan","Multiple choice","https://dashboard.blooket.com/set/6ab34486185db742088aef56"]
+];
 
-if (distance < smallestDistance) {
-smallestDistance = distance;
-activeIndex = index;
+function showPage(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const target=document.getElementById("page-"+name);
+  if(target) target.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===name ||
+      ((name==="test3"||name==="test4")&&b.dataset.page==="tests"));
+  });
+
+  document.documentElement.classList.toggle("home-snapping",name==="home");
+  window.scrollTo({
+    top:0,
+    behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"
+  });
 }
 
-const normalizedDistance = distance / Math.max(viewportHeight * .78, 1);
-let opacity = Math.max(0, Math.min(1, 1 - normalizedDistance));
-
-if (reducedMotion.matches) {
-opacity = index === activeIndex ? 1 : .25;
-}
-
-scene.style.setProperty("--scene-opacity", opacity.toFixed(3));
-scene.style.zIndex = String(Math.round(100 - distance));
+document.querySelectorAll(".nav-btn").forEach(button=>{
+  button.addEventListener("click",()=>showPage(button.dataset.page));
 });
 
-dots.forEach((dot, index) => {
-dot.setAttribute("aria-current", String(index === activeIndex));
-});
+/* Follow the device theme unless the visitor chooses an override. */
+const themeToggle=document.getElementById("theme-toggle");
+const root=document.documentElement;
+let themeOverride=null;
 
-ticking = false;
+function devicePrefersDark(){
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function currentTheme(){
+  return themeOverride || (devicePrefersDark()?"dark":"light");
+}
+function updateThemeButton(){
+  const theme=currentTheme();
+  themeToggle.textContent=theme==="dark"?"☀ Light mode":"☾ Dark mode";
+  themeToggle.setAttribute("aria-label",
+    theme==="dark"?"Switch to light mode for this visit":"Switch to dark mode for this visit");
+  themeToggle.title=themeOverride
+    ?"Theme manually selected for this visit"
+    :"Theme follows your device setting";
+}
+function applyTheme(){
+  if(themeOverride) root.setAttribute("data-theme",themeOverride);
+  else root.removeAttribute("data-theme");
+  updateThemeButton();
+}
+themeToggle.addEventListener("click",()=>{
+  themeOverride=currentTheme()==="dark"?"light":"dark";
+  applyTheme();
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{
+  if(!themeOverride) updateThemeButton();
+});
+updateThemeButton();
+
+function toggleKey(id,button){
+  const key=document.getElementById(id);
+  const open=key.classList.toggle("visible");
+  button.textContent=open?"Hide Answer Key":"Show Answer Key";
+  button.setAttribute("aria-expanded",String(open));
 }
 
-function requestUpdate() {
-if (!ticking) {
-ticking = true;
-window.requestAnimationFrame(updateScenes);
-}
-}
+/* Render cards without redundant platform-name pills on platform pages. */
+function renderResources(containerId,items,kind){
+  const container=document.getElementById(containerId);
+  container.innerHTML="";
+  let currentGroup="";
+  let currentGrid=null;
 
-window.addEventListener("scroll", requestUpdate, { passive: true });
-window.addEventListener("resize", requestUpdate);
+  items.forEach(item=>{
+    const group=item[0];
+    if(group!==currentGroup){
+      currentGroup=group;
+      const heading=document.createElement("h2");
+      heading.className="group-heading";
+      heading.style.marginTop="28px";
+      heading.textContent=group;
+      container.appendChild(heading);
 
-dots.forEach(dot => {
-dot.addEventListener("click", () => {
-const target = document.getElementById(dot.dataset.target);
+      currentGrid=document.createElement("div");
+      currentGrid.className="resource-grid";
+      container.appendChild(currentGrid);
+    }
 
-if (target) {
-target.scrollIntoView({
-behavior: reducedMotion.matches ? "auto" : "smooth",
-block: "start"
-});
-}
-});
-});
+    const card=document.createElement("article");
+    card.className="resource-card";
 
-document.addEventListener("keydown", event => {
-if (
-event.altKey ||
-event.ctrlKey ||
-event.metaKey ||
-event.target.closest("a, button, input, textarea, select")
-) {
-return;
-}
+    const title=document.createElement("h3");
+    title.textContent=item[0];
 
-const current = scenes.reduce((best, scene, index) => {
-const distance = Math.abs(scene.getBoundingClientRect().top);
-return distance < best.distance ? { index, distance } : best;
-}, { index: 0, distance: Infinity }).index;
+    const detail=document.createElement("p");
+    detail.textContent=[item[1],item[2]].filter(Boolean).join(" · ");
 
-let next = current;
+    const link=document.createElement("a");
+    link.className="resource-button";
+    link.href=item[3];
+    link.target="_blank";
+    link.rel="noopener noreferrer";
+    link.textContent="Open "+kind+" ↗";
 
-if (["ArrowDown", "PageDown", " "].includes(event.key)) {
-next = Math.min(scenes.length - 1, current + 1);
-} else if (["ArrowUp", "PageUp"].includes(event.key)) {
-next = Math.max(0, current - 1);
-} else if (event.key === "Home") {
-next = 0;
-} else if (event.key === "End") {
-next = scenes.length - 1;
-} else {
-return;
+    card.append(title,detail,link);
+    currentGrid.appendChild(card);
+  });
 }
 
-event.preventDefault();
+function renderQuizlets(){
+  const container=document.getElementById("quizlet-list");
+  quizlets.forEach(item=>{
+    const card=document.createElement("article");
+    card.className="resource-card";
 
-scenes[next].scrollIntoView({
-behavior: reducedMotion.matches ? "auto" : "smooth",
-block: "start"
-});
-});
+    const title=document.createElement("h3");
+    title.textContent=item[0];
 
-updateScenes();
-})();
+    const detail=document.createElement("p");
+    detail.textContent="Aniket Eshan";
+
+    const link=document.createElement("a");
+    link.className="resource-button";
+    link.href=item[1];
+    link.target="_blank";
+    link.rel="noopener noreferrer";
+    link.textContent="Open Quizlet ↗";
+
+    card.append(title,detail,link);
+    container.appendChild(card);
+  });
+}
+
+renderResources("gimkit-list",gimkits,"Gimkit");
+renderResources("blooket-list",blookets,"Blooket");
+renderQuizlets();
+
+/* The homepage snaps; other pages scroll normally. */
+root.classList.add("home-snapping");
 </script>
-
 </body>
 </html>
